@@ -1,0 +1,49 @@
+' from http://www.pptfaq.com/FAQ00820_Show_me_a_list_of_designs_and_which_slides_use_them.htm
+
+Sub ListDesigns()
+  Dim oPres as Presentation
+    Dim oSld as Slide
+      Dim oDes as Design
+        Dim sText as String
+	  Dim FileNum as Integer
+	    Dim PathSep as String
+
+	      #If Mac Then
+	            PathSep = ":"
+		      #Else
+		            PathSep = "\"
+			      #End If
+
+			        Set oPres = ActivePresentation
+
+				  sText =  "=== DESIGNS in this presentation ===" & vbcrlf
+
+				    For Each oDes in oPres.Designs
+				         sText = sText &  oDes.Name & vbCRLF
+					   Next
+
+					     sText = sText &  "=== SLIDES and the Designs they rode in on ===" & vbCRLF
+
+					       For Each oSld in oPres.Slides
+					            sText = sText & "Slide:" & VbTab & oSld.SlideIndex _
+						         & vbTab & oSld.Design.Name & vbCRLF
+							   Next
+
+							      FileNum = FreeFile
+							        Open oPres.Path & PathSep & "REPORT.TXT" For Output As FileNum 
+								  Print #FileNum, sText
+								    Close FileNum
+
+								      MsgBox "Your report is saved as:" & vbCRLF _
+								                      & oPres.Path & PathSep & "REPORT.TXT"
+
+										        #If Mac Then
+											    'MsgBox "Your report is saved as:" & vbCRLF _
+											                    & oPres.Path & PathSep & "REPORT.TXT"
+													      #Else
+													          Call Shell("Notepad.exe" & " " &  oPres.Path & PathSep & "REPORT.TXT", vbNormalFocus)
+														    #End If
+
+														       Set oPres = Nothing
+
+														       End Sub
